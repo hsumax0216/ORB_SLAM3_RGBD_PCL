@@ -14,7 +14,7 @@ chmod +x ./build.sh
 python evaluation/associate.py /home/spurs/dataset/rgbd_dataset_freiburg2_large_with_loop/rgb.txt /home/spurs/dataset/rgbd_dataset_freiburg2_large_with_loop/depth.txt >> associate.txt
 
 # 参照run_bash.txt 
-./Examples/RGB-D/rgbd_tum ./Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/spurs/dataset/rgbd_dataset_freiburg3_long_office_household /home/spurs/dataset/rgbd_dataset_freiburg3_long_office_household/assocaite.txt
+./Examples/RGB-D/rgbd_tum ./Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/spurs/dataset/rgbd_dataset_freiburg3_long_office_household /home/spurs/dataset/rgbd_dataset_freiburg3_long_office_household/associate.txt
 
 
 ```
