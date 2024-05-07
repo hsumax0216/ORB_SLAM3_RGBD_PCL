@@ -37,12 +37,13 @@ int main(int argc, char **argv)
         cerr << endl << "Usage: ./rgbd_tum path_to_vocabulary path_to_settings path_to_sequence path_to_association" << endl;
         return 1;
     }
-
+    cout << "pass arg."<< endl;
     // Retrieve paths to images
     vector<string> vstrImageFilenamesRGB;
     vector<string> vstrImageFilenamesD;
     vector<double> vTimestamps;
     string strAssociationFilename = string(argv[4]);
+    cout << "strAssociationFilename: "<< strAssociationFilename <<endl;
     LoadImages(strAssociationFilename, vstrImageFilenamesRGB, vstrImageFilenamesD, vTimestamps);
 
     // Check consistency in the number of images and depthmaps
@@ -58,8 +59,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    cout << "Create SLAM system. It initializes all system threads and gets ready to process frames." << endl;
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
     ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::RGBD,true);
+    cout << "Create SLAM system finished." << endl;
     float imageScale = SLAM.GetImageScale();
 
     // Vector for tracking time statistics
@@ -149,12 +152,19 @@ int main(int argc, char **argv)
 void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageFilenamesRGB,
                 vector<string> &vstrImageFilenamesD, vector<double> &vTimestamps)
 {
+    cout << "In LoadImages()." << endl;
     ifstream fAssociation;
     fAssociation.open(strAssociationFilename.c_str());
+    int count = 0;
     while(!fAssociation.eof())
     {
         string s;
         getline(fAssociation,s);
+        if(count==0){
+            cout << "s: [" << s << "]" << endl;
+            count++;
+        }
+        // cout << "s: [" << s << "]" << endl;
         if(!s.empty())
         {
             stringstream ss;
@@ -162,13 +172,18 @@ void LoadImages(const string &strAssociationFilename, vector<string> &vstrImageF
             double t;
             string sRGB, sD;
             ss >> t;
+            // cout << "t: " << t << ", ";
             vTimestamps.push_back(t);
             ss >> sRGB;
+            // cout << "sRGB: " << sRGB << ", ";
             vstrImageFilenamesRGB.push_back(sRGB);
             ss >> t;
+            // cout << "t: " << t << ", ";
             ss >> sD;
+            // cout << "sD: " << sD << endl;
             vstrImageFilenamesD.push_back(sD);
 
         }
     }
+    cout << "Exiting LoadImages()." << endl;
 }

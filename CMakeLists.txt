@@ -41,6 +41,7 @@ MESSAGE(${OpenCV_VERSION})
 find_package(Eigen3 3.3.7 REQUIRED)
 find_package(Pangolin REQUIRED)
 find_package( PCL 1.13.0 REQUIRED )
+find_package(realsense2)
 
 include_directories(
 ${PROJECT_SOURCE_DIR}
@@ -135,6 +136,15 @@ ${PCL_LIBRARIES}
 -lcrypto
 )
 
+# If RealSense SDK is found the library is added and its examples compiled
+if(realsense2_FOUND)
+    include_directories(${PROJECT_NAME}
+    ${realsense_INCLUDE_DIR}
+    )
+    target_link_libraries(${PROJECT_NAME}
+    ${realsense2_LIBRARY}
+    )
+endif()
 
 # RGB-D examples
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
@@ -142,4 +152,19 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
 add_executable(rgbd_tum
         Examples/RGB-D/rgbd_tum.cc)
 target_link_libraries(rgbd_tum ${PROJECT_NAME})
+
+if(realsense2_FOUND)
+      add_executable(rgbd_realsense_D435i
+            Examples/RGB-D/rgbd_realsense_D435i.cc)
+      target_link_libraries(rgbd_realsense_D435i ${PROJECT_NAME})
+endif()
+
+# RGB-D-inertial examples
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D-Inertial)
+
+if(realsense2_FOUND)
+      add_executable(rgbd_inertial_realsense_D435i
+            Examples/RGB-D-Inertial/rgbd_inertial_realsense_D435i.cc)
+      target_link_libraries(rgbd_inertial_realsense_D435i ${PROJECT_NAME})
+endif()
 

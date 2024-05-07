@@ -26,6 +26,8 @@
 
 #include <boost/make_shared.hpp>
 
+#include <pcl/io/pcd_io.h>
+
 PointCloudData::PointCloudData(){
     cloud = std::make_shared<PointCloud>();
 }
@@ -286,6 +288,7 @@ void PointCloudMapping::viewer()
 
                 *globalMap += *cloud;
             }
+            pcl::io::savePCDFileBinary("vslam.pcd", *globalMap);   // 只需要加入这一句
             //globalMap->width = globalMap->points.size();
             //globalMap->height = 1;
             //globalMap->is_dense = true;
