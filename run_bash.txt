@@ -8,4 +8,4 @@
 ./Examples/RGB-D/rgbd_tum ./Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/spurs/dataset/rgbd_dataset_freiburg3_long_office_household /home/spurs/dataset/rgbd_dataset_freiburg3_long_office_household/assocaite.txt
 
 
-
+./Examples/RGB-D/rgbd_realsense_D435i Vocabulary/ORBvoc.txt ./Examples/RGB-D/RealSense_D435i.yaml
