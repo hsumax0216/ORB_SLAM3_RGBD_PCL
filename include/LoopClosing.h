@@ -222,8 +222,9 @@ protected:
     // Fix scale in the stereo/RGB-D case
     bool mbFixScale;
 
-
-    bool mnFullBAIdx;
+    // BUG: https://github.com/UZ-SLAMLab/ORB_SLAM3/issues/550
+    // bool mnFullBAIdx;
+    unsigned int mnFullBAIdx;
 
 
 
