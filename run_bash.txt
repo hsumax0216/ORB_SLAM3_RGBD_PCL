@@ -9,3 +9,5 @@
 
 
 ./Examples/RGB-D/rgbd_realsense_D435i Vocabulary/ORBvoc.txt ./Examples/RGB-D/RealSense_D435i.yaml
+
+./Examples/RGB-D-Inertial/rgbd_inertial_realsense_D435i Vocabulary/ORBvoc.txt ./Examples/RGB-D-Inertial/RealSense_D435i.yaml
