@@ -168,3 +168,30 @@ if(realsense2_FOUND)
       target_link_libraries(rgbd_inertial_realsense_D435i ${PROJECT_NAME})
 endif()
 
+# Mono examples
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
+
+# if(realsense2_FOUND)
+#       add_executable(mono_realsense_D435i
+#          Examples/Monocular/mono_realsense_D435i.cc)
+#       target_link_libraries(mono_realsense_D435i ${PROJECT_NAME})
+# endif()
+
+# Stereo examples
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
+
+# if(realsense2_FOUND)
+#       add_executable(stereo_realsense_D435i
+#          Examples/Stereo/stereo_realsense_D435i.cc)
+#       target_link_libraries(stereo_realsense_D435i ${PROJECT_NAME})
+# endif()
+
+# Mono-intertial examples
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular-Inertial)
+
+# if(realsense2_FOUND)
+#       add_executable(mono_intertial_realsense_D435i
+#          Examples/Monocular-Inertial/mono_intertial_realsense_D435i.cc)
+#       target_link_libraries(mono_intertial_realsense_D435i ${PROJECT_NAME})
+# endif()
+

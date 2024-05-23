@@ -134,8 +134,8 @@ int main(int argc, char **argv) {
         if (sensor.supports(RS2_CAMERA_INFO_NAME)) {
             ++index;
             if (index == 1) {
-                sensor.set_option(RS2_OPTION_ENABLE_AUTO_EXPOSURE, 1);
-                sensor.set_option(RS2_OPTION_AUTO_EXPOSURE_LIMIT,5000);
+                // sensor.set_option(RS2_OPTION_ENABLE_AUTO_EXPOSURE, 1);/*2024-05-23 17:53 註解 by 徐浩恩*/
+                // sensor.set_option(RS2_OPTION_AUTO_EXPOSURE_LIMIT,5000);/*2024-05-23 17:53 註解 by 徐浩恩*/
                 sensor.set_option(RS2_OPTION_EMITTER_ENABLED, 0); // switch off emitter
             }
             // std::cout << "  " << index << " : " << sensor.get_info(RS2_CAMERA_INFO_NAME) << std::endl;
@@ -150,6 +150,10 @@ int main(int argc, char **argv) {
     rs2::pipeline pipe;
     // Create a configuration for configuring the pipeline with a non default profile
     rs2::config cfg;
+    
+    // BGR stream
+    cfg.enable_stream(RS2_STREAM_COLOR,640, 480, RS2_FORMAT_BGR8, 30);
+
     cfg.enable_stream(RS2_STREAM_INFRARED, 1, 640, 480, RS2_FORMAT_Y8, 30);
 
     // IMU callback
