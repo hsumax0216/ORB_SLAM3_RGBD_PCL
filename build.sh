@@ -5,7 +5,7 @@ rm -rf build
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j4
+make -j`nproc`
 
 cd ../../g2o
 
@@ -15,7 +15,7 @@ rm -rf build
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j4
+make -j`nproc`
 
 cd ../../Sophus
 
@@ -25,7 +25,7 @@ rm -rf build
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j4
+make -j`nproc`
 
 cd ../../../
 
@@ -41,4 +41,4 @@ rm -rf build
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j4
+make -j`nproc`
