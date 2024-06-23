@@ -28,6 +28,11 @@
 
 #include <pcl/io/pcd_io.h>
 
+#include <pcl/point_types.h>
+#include <pcl/visualization/pcl_visualizer.h>
+
+#define FILE_PATH "vslam.pcd"
+
 PointCloudData::PointCloudData(){
     cloud = std::make_shared<PointCloud>();
 }
@@ -44,6 +49,7 @@ PointCloudMapping::PointCloudMapping(double resolution_)
     globalMap = std::make_shared<pcl::PointCloud<PointT>>();
 
     viewerThread = new thread(&PointCloudMapping::viewer, this );
+    saverThread  = new thread(&PointCloudMapping::saver, this );
 }
 
 void PointCloudMapping::shutdown()
@@ -52,6 +58,7 @@ void PointCloudMapping::shutdown()
         unique_lock<mutex> lck(shutDownMutex);
         shutDownFlag = true;
         keyFrameUpdated.notify_one();
+        saveCloudUpdated.notify_one();
     }
     viewerThread->join();
 }
@@ -243,6 +250,7 @@ void PointCloudMapping::insertKeyFrame(KeyFrame* kf, cv::Mat& color, cv::Mat& de
     mvpKFs = KFs;
 
     keyFrameUpdated.notify_one();
+    saveCloudUpdated.notify_one();
 }
 
 
@@ -272,7 +280,7 @@ void PointCloudMapping::viewer()
             for (auto kf : mvpKFs)
                 sKFs.insert(kf->mnFrameId);
             
-            PointCloud::Ptr globalMap = std::make_shared<pcl::PointCloud<PointT>>();
+            globalMap = std::make_shared<pcl::PointCloud<PointT>>();
             for ( auto pcd : mPointCloudDatas)
             {
                 if (pcd.kf->isBad())
@@ -288,7 +296,8 @@ void PointCloudMapping::viewer()
 
                 *globalMap += *cloud;
             }
-            pcl::io::savePCDFileBinary("vslam.pcd", *globalMap);   // 只需要加入这一句
+            //pcl::io::savePCDFileBinary(FILE_PATH, *globalMap);   // 只需要加入这一句
+            
             //globalMap->width = globalMap->points.size();
             //globalMap->height = 1;
             //globalMap->is_dense = true;
@@ -299,8 +308,37 @@ void PointCloudMapping::viewer()
             //globalMap->swap( *tmp );
             
             viewer.showCloud( globalMap );
+            saveCloudUpdated.notify_one();
             //cout << "show global map, size=" << globalMap->points.size() << endl;
         }
     }
 }
 
+
+void PointCloudMapping::saver()
+{
+    while (1)
+    {
+        {
+            std::unique_lock<std::mutex> lck_shutdown(shutDownMutex);
+            if (shutDownFlag)
+            {
+                break;
+            }
+        }
+        {
+            std::unique_lock<std::mutex> lck_saveCloudUpdated(saveCloudMutex);
+            saveCloudUpdated.wait(lck_saveCloudUpdated);
+        }
+
+        // save the updated point cloud
+        {
+            std::unique_lock<std::mutex> lck(keyframeMutex);
+
+            if (globalMap && !globalMap->empty())
+            {
+                pcl::io::savePCDFileBinary(FILE_PATH, *globalMap);
+            }
+        }
+    }
+}

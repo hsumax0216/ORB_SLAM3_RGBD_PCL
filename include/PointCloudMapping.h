@@ -61,11 +61,13 @@ public:
 
     void shutdown();
     void viewer();
+    void saver();
 
 protected:
 
     PointCloud::Ptr globalMap;
     std::thread* viewerThread;
+    std::thread* saverThread;
     bool    shutDownFlag    =false;
     mutex   shutDownMutex;
 
@@ -74,6 +76,9 @@ protected:
 
     // data to generate point clouds
     mutex                   keyframeMutex;
+
+    condition_variable  saveCloudUpdated;
+    mutex               saveCloudMutex;
 
     double resolution = 0.04;
     pcl::VoxelGrid<PointT>  voxel;
