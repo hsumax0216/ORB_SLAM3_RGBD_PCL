@@ -1,3 +1,5 @@
+<details>
+  <summary><strong>lturing readme</strong>(click to expand)</summary>
 本仓库提供orbslam3的rgbd稠密建图(pcl)
 
 ## 运行
@@ -18,6 +20,7 @@ python evaluation/associate.py /data/dataset/rgbd_dataset_freiburg2_large_with_l
 
 
 ```
+</details>
 
 <br>
 <details>
