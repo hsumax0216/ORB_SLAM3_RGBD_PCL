@@ -151,8 +151,8 @@ int main(int argc, char **argv) {
     // Create a configuration for configuring the pipeline with a non default profile
     rs2::config cfg;
     
-    // BGR stream
-    cfg.enable_stream(RS2_STREAM_COLOR,640, 480, RS2_FORMAT_BGR8, 30);
+    // // BGR stream
+    // cfg.enable_stream(RS2_STREAM_COLOR,640, 480, RS2_FORMAT_BGR8, 30);
 
     cfg.enable_stream(RS2_STREAM_INFRARED, 1, 640, 480, RS2_FORMAT_Y8, 30);
 
@@ -279,6 +279,7 @@ int main(int argc, char **argv) {
         std::chrono::monotonic_clock::time_point t_Start_Track = std::chrono::monotonic_clock::now();
     #endif
 #endif
+        // std::cout << "im size:" << im.size() <<", im channels:"<< im.channels() <<std::endl;
         // Stereo images are already rectified.
         SLAM.TrackMonocular(im, timestamp);
 #ifdef REGISTER_TIMES

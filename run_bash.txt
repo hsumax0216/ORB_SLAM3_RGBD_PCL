@@ -13,3 +13,7 @@
 
 ./Examples/RGB-D-Inertial/rgbd_inertial_realsense_D435i Vocabulary/ORBvoc.txt ./Examples/RGB-D-Inertial/RealSense_D435i.yaml
 
+./Examples/Monocular/mono_tum ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml ~/dataset/MH_01_easy/mav0/cam0/
+
+./Examples/Monocular/mono_realsense_D435i Vocabulary/ORBvoc.txt ./Examples/Monocular/RealSense_D435i.yaml
+

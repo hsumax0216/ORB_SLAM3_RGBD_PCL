@@ -371,7 +371,12 @@ void FrameDrawer::Update(Tracking *pTracker)
 {
     unique_lock<mutex> lock(mMutex);
     //pTracker->mImGray.copyTo(mIm);
-    pTracker->mImRGB.copyTo(mIm);
+    if(pTracker->mSensor==System::RGBD || pTracker->mSensor==System::IMU_RGBD){
+        pTracker->mImRGB.copyTo(mIm);
+    }
+    else{
+        pTracker->mImGray.copyTo(mIm);
+    }
     mvCurrentKeys=pTracker->mCurrentFrame.mvKeys;
     mThDepth = pTracker->mCurrentFrame.mThDepth;
     mvCurrentDepth = pTracker->mCurrentFrame.mvDepth;

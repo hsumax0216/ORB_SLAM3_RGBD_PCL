@@ -172,13 +172,17 @@ if(realsense2_FOUND)
 endif()
 
 # Mono examples
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
 
-# if(realsense2_FOUND)
-#       add_executable(mono_realsense_D435i
-#          Examples/Monocular/mono_realsense_D435i.cc)
-#       target_link_libraries(mono_realsense_D435i ${PROJECT_NAME})
-# endif()
+if(realsense2_FOUND)
+      add_executable(mono_realsense_D435i
+         Examples/Monocular/mono_realsense_D435i.cc)
+      target_link_libraries(mono_realsense_D435i ${PROJECT_NAME})
+endif()
+
+add_executable(mono_tum
+   Examples/Monocular/mono_tum.cc)
+target_link_libraries(mono_tum ${PROJECT_NAME})
 
 # Stereo examples
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)

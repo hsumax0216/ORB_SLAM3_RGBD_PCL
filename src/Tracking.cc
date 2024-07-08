@@ -1567,6 +1567,7 @@ Sophus::SE3f Tracking::GrabImageMonocular(const cv::Mat &im, const double &times
     mImGray = im;
     if(mImGray.channels()==3)
     {
+        std::cout<<"GrabImageMonocular: mImGray has 3 channels."<<std::endl;
         if(mbRGB)
             cvtColor(mImGray,mImGray,cv::COLOR_RGB2GRAY);
         else
@@ -1574,6 +1575,7 @@ Sophus::SE3f Tracking::GrabImageMonocular(const cv::Mat &im, const double &times
     }
     else if(mImGray.channels()==4)
     {
+        std::cout<<"GrabImageMonocular: mImGray has 4 channels."<<std::endl;
         if(mbRGB)
             cvtColor(mImGray,mImGray,cv::COLOR_RGBA2GRAY);
         else
@@ -3338,8 +3340,23 @@ void Tracking::CreateNewKeyFrame()
     mnLastKeyFrameId = mCurrentFrame.mnId;
     mpLastKeyFrame = pKF;
 
-    //mpPointCloudMapping->insertKeyFrame(pKF, mImRGB, mImD, mpAtlas->GetAllKeyFrames());
-    mpPointCloudMapping->insertKeyFrame(pKF, mImRGB, mImD, mpAtlas->GetAllKeyFrames(), mK, mDistCoef);
+    if(mSensor==System::RGBD || mSensor==System::IMU_RGBD){
+        //mpPointCloudMapping->insertKeyFrame(pKF, mImRGB, mImD, mpAtlas->GetAllKeyFrames());
+        mpPointCloudMapping->insertKeyFrame(pKF, mImRGB, mImD, mpAtlas->GetAllKeyFrames(), mK, mDistCoef);
+    }
+    else if((mSensor==System::MONOCULAR || mSensor==System::IMU_MONOCULAR) && !mImGray.empty()){
+        cv::Mat mImGrayThr;
+        std::cout << "mImGray size:" << mImGray.size() <<", mImGray channels:"<< mImGray.channels() <<std::endl;
+
+        cv::cvtColor(mImGray,mImGrayThr,cv::COLOR_GRAY2BGR);
+        std::cout << "mImGrayThr size:" << mImGrayThr.size() <<", mImGrayThr channels:"<< mImGrayThr.channels() <<std::endl;
+        // cv::imshow("mImGrayThr",mImGrayThr);
+        // std::string dummy;
+        // std::cout << "Enter to continue..." << std::endl;
+        // std::getline(std::cin, dummy);
+
+        // mpPointCloudMapping->insertKeyFrame(pKF, mImGrayThr, mImD, mpAtlas->GetAllKeyFrames(), mK, mDistCoef);
+    }
         
 
 }

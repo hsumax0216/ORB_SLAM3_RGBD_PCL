@@ -65,8 +65,15 @@ int main(int argc, char **argv)
     cv::Mat im;
     for(int ni=0; ni<nImages; ni++)
     {
+        std::cout<<"Monocular tum main loop begin: "<<ni<<" loops.\n";
+
         // Read image from file
         im = cv::imread(string(argv[3])+"/"+vstrImageFilenames[ni],cv::IMREAD_UNCHANGED); //,cv::IMREAD_UNCHANGED);
+
+        // std::cout << "im size:" << im.size() <<", im channels:"<< im.channels() <<std::endl;
+        // cv::cvtColor(im, im, cv::COLOR_GRAY2BGR);
+        // std::cout << "im size:" << im.size() <<", im channels:"<< im.channels() <<std::endl;
+
         double tframe = vTimestamps[ni];
 
         if(im.empty())
@@ -104,9 +111,12 @@ int main(int argc, char **argv)
 #else
         std::chrono::monotonic_clock::time_point t1 = std::chrono::monotonic_clock::now();
 #endif
+        // std::cout<<"In  func: SLAM.TrackMonocular.\n";
 
         // Pass the image to the SLAM system
         SLAM.TrackMonocular(im,tframe);
+
+        // std::cout<<"out func: SLAM.TrackMonocular.\n";
 
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
@@ -132,6 +142,8 @@ int main(int argc, char **argv)
 
         if(ttrack<T)
             usleep((T-ttrack)*1e6);
+            
+        // std::cout<<"Monocular tum main loop END: "<<ni<<" loops.\n";
     }
 
     // Stop all threads
