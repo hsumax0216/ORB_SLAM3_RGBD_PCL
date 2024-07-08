@@ -306,9 +306,9 @@ int main(int argc, char **argv) {
     intrinsics_cam.coeffs[2] << ", " << intrinsics_cam.coeffs[3] << ", " << intrinsics_cam.coeffs[4] << ", " << std::endl;
     std::cout << " Model = " << intrinsics_cam.model << std::endl;
 
-
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
     ORB_SLAM3::System SLAM(argv[1],argv[2],ORB_SLAM3::System::RGBD, true, 0, file_name);
+    std::cout << "Creaded ORB SYSTEM.\n";
     float imageScale = SLAM.GetImageScale();
 
     double timestamp;
@@ -317,6 +317,9 @@ int main(int argc, char **argv) {
     double t_resize = 0.f;
     double t_track = 0.f;
     rs2::frameset fs;
+
+    double CurrentFrameTimeStamp = -1.0;
+    double LastFrameTimeStamp = -1.0;
 
     while (!SLAM.isShutDown())
     {
@@ -357,7 +360,7 @@ int main(int argc, char **argv) {
         /*cv::Mat depthCV_8U;
         depthCV.convertTo(depthCV_8U,CV_8U,0.01);
         cv::imshow("depth image", depthCV_8U);*/
-
+        std::cout << "DEBUG imageScale: " << imageScale << std::endl;
         if(imageScale != 1.f)
         {
 #ifdef REGISTER_TIMES
@@ -391,8 +394,19 @@ int main(int argc, char **argv) {
     #endif
 #endif
         // Pass the image to the SLAM system
+        
+        // std::cout << "im size:" << im.size() <<", im channels:"<< im.channels() <<std::endl;
+        // std::cout << "depth size:" << depth.size() <<", depth channels:"<< depth.channels() <<std::endl;
         SLAM.TrackRGBD(im, depth, timestamp); //, vImuMeas); depthCV
-
+        //REAL timestamp to calculate fps
+        LastFrameTimeStamp = CurrentFrameTimeStamp;
+        std::chrono::steady_clock::time_point t_Start_Track_FPS = std::chrono::steady_clock::now();
+        auto start = std::chrono::time_point_cast<std::chrono::milliseconds>(t_Start_Track_FPS);
+        CurrentFrameTimeStamp = start.time_since_epoch().count() / 1000.0;
+        if (LastFrameTimeStamp > 0){
+            SLAM.SetTrackTimeStamp(CurrentFrameTimeStamp,LastFrameTimeStamp);
+        }
+        
 #ifdef REGISTER_TIMES
     #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t_End_Track = std::chrono::steady_clock::now();

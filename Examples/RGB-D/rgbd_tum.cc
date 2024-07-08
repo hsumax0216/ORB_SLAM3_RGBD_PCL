@@ -68,6 +68,9 @@ int main(int argc, char **argv)
     // Vector for tracking time statistics
     vector<float> vTimesTrack;
     vTimesTrack.resize(nImages);
+    
+    double CurrentFrameTimeStamp = -1.0;
+    double LastFrameTimeStamp = -1.0;
 
     cout << endl << "-------" << endl;
     cout << "Start processing sequence ..." << endl;
@@ -102,9 +105,17 @@ int main(int argc, char **argv)
 #else
         std::chrono::monotonic_clock::time_point t1 = std::chrono::monotonic_clock::now();
 #endif
-
+        
         // Pass the image to the SLAM system
         SLAM.TrackRGBD(imRGB,imD,tframe);
+        //REAL timestamp to calculate fps
+        LastFrameTimeStamp = CurrentFrameTimeStamp;
+        std::chrono::steady_clock::time_point t_Start_Track_FPS = std::chrono::steady_clock::now();
+        auto start = std::chrono::time_point_cast<std::chrono::milliseconds>(t_Start_Track_FPS);
+        CurrentFrameTimeStamp = start.time_since_epoch().count() / 1000.0;
+        if (LastFrameTimeStamp > 0){
+            SLAM.SetTrackTimeStamp(CurrentFrameTimeStamp,LastFrameTimeStamp);
+        }
 
 #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
