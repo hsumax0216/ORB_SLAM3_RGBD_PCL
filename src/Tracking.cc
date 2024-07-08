@@ -46,7 +46,7 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     mbOnlyTracking(false), mbMapUpdated(false), mbVO(false), mpORBVocabulary(pVoc), mpKeyFrameDB(pKFDB), mpPointCloudMapping(pPointCloud),
     mbReadyToInitializate(false), mpSystem(pSys), mpViewer(NULL), bStepByStep(false),
     mpFrameDrawer(pFrameDrawer), mpMapDrawer(pMapDrawer), mpAtlas(pAtlas), mnLastRelocFrameId(0), time_recently_lost(5.0),
-    mnInitialFrameId(0), mbCreatedMap(false), mnFirstFrameId(0), mpCamera2(nullptr), mpLastKeyFrame(static_cast<KeyFrame*>(NULL))
+    mnInitialFrameId(0), mbCreatedMap(false), mnFirstFrameId(0), mpCamera2(nullptr), mpLastKeyFrame(static_cast<KeyFrame*>(NULL)), mTrackCurrentFTimestamp(-1.0), mTrackLastFTimestamp(-1.0)
 {
     // Load camera parameters from settings file
     if(settings){
@@ -4102,6 +4102,12 @@ void Tracking::SaveSubTrajectory(string strNameFile_frames, string strNameFile_k
 float Tracking::GetImageScale()
 {
     return mImageScale;
+}
+
+void Tracking::SetTrackTimeStamp(double CFTime,double LFTime)
+{
+    mTrackCurrentFTimestamp = CFTime;
+    mTrackLastFTimestamp = LFTime;
 }
 
 #ifdef REGISTER_LOOP

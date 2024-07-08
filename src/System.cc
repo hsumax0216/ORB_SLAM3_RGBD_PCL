@@ -339,11 +339,15 @@ Sophus::SE3f System::TrackRGBD(const cv::Mat &im, const cv::Mat &depthmap, const
     cv::Mat imToFeed = im.clone();
     cv::Mat imDepthToFeed = depthmap.clone();
     if(settings_ && settings_->needToResize()){
+        std::cout << "TrackRGBD.settings_->needToResize() is True, settings_->newImSize(): " << settings_->newImSize() << std::endl;
         cv::Mat resizedIm;
         cv::resize(im,resizedIm,settings_->newImSize());
         imToFeed = resizedIm;
 
         cv::resize(depthmap,imDepthToFeed,settings_->newImSize());
+    }
+    else{
+        std::cout << "TrackRGBD.settings_->needToResize() is False, settings_->newImSize(): " << settings_->newImSize() << std::endl;
     }
 
     // Check mode change
@@ -1384,6 +1388,11 @@ void System::ChangeDataset()
 float System::GetImageScale()
 {
     return mpTracker->GetImageScale();
+}
+
+void System::SetTrackTimeStamp(double CFTime,double LFTime = -1.0)
+{
+    mpTracker->SetTrackTimeStamp(CFTime,LFTime);
 }
 
 #ifdef REGISTER_TIMES

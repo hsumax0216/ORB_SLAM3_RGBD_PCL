@@ -74,6 +74,8 @@ protected:
     std::mutex mMutex;
     vector<pair<cv::Point2f, cv::Point2f> > mvTracks;
 
+    double mCurrentFPS;
+
     Frame mCurrentFrame;
     vector<MapPoint*> mvpLocalMap;
     vector<cv::KeyPoint> mvMatchedKeys;

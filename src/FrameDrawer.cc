@@ -32,6 +32,7 @@ FrameDrawer::FrameDrawer(Atlas* pAtlas):both(false),mpAtlas(pAtlas)
     mState=Tracking::SYSTEM_NOT_READY;
     mIm = cv::Mat(480,640,CV_8UC3, cv::Scalar(0,0,0));
     mImRight = cv::Mat(480,640,CV_8UC3, cv::Scalar(0,0,0));
+    mCurrentFPS = -1.0;
 }
 
 cv::Mat FrameDrawer::DrawFrame(float imageScale)
@@ -344,6 +345,8 @@ void FrameDrawer::DrawTextInfo(cv::Mat &im, int nState, cv::Mat &imText)
         int nMaps = mpAtlas->CountMaps();
         int nKFs = mpAtlas->KeyFramesInMap();
         int nMPs = mpAtlas->MapPointsInMap();
+        if(mCurrentFPS>0)
+            s << std::setprecision(2) << "FPS: " << mCurrentFPS << ", ";
         s << "Maps: " << nMaps << ", KFs: " << nKFs << ", MPs: " << nMPs << ", Matches: " << mnTracked;
         if(mnTrackedVO>0)
             s << ", + VO matches: " << mnTrackedVO;
@@ -381,6 +384,14 @@ void FrameDrawer::Update(Tracking *pTracker)
     mThDepth = pTracker->mCurrentFrame.mThDepth;
     mvCurrentDepth = pTracker->mCurrentFrame.mvDepth;
 
+    // //Update input FPS
+    // if( pTracker->mState != Tracking::OK ){
+    //     double mLastFTimeStamp,mCurrentFTimeStamp;
+    //     mLastFTimeStamp = pTracker->mLastFrame.mTimeStamp;
+    //     mCurrentFTimeStamp = pTracker->mCurrentFrame.mTimeStamp;
+    //     mCurrentFPS = 1/((mCurrentFTimeStamp-mLastFTimeStamp)*1e-5);
+    // }
+
     if(both){
         mvCurrentKeysRight = pTracker->mCurrentFrame.mvKeysRight;
         pTracker->mImRight.copyTo(mImRight);
@@ -416,6 +427,24 @@ void FrameDrawer::Update(Tracking *pTracker)
     }
     else if(pTracker->mLastProcessedState==Tracking::OK)
     {
+        //Update input FPS
+        double mLastFTimeStamp,mCurrentFTimeStamp,timeoffset;
+
+        // using camera/dataset given timestamp
+        // mLastFTimeStamp = pTracker->mLastFrame.mTimeStamp;
+        // mCurrentFTimeStamp = pTracker->mCurrentFrame.mTimeStamp;
+        
+        // using xxx_realsense_D435i c++ function input given timestamp
+        mLastFTimeStamp = pTracker->mTrackLastFTimestamp;
+        mCurrentFTimeStamp = pTracker->mTrackCurrentFTimestamp;
+
+        timeoffset = mCurrentFTimeStamp-mLastFTimeStamp;
+        
+
+        std::cout << std::fixed<< "mCurrentFTimeStamp: " << mCurrentFTimeStamp << ", mLastFTimeStamp: " << mLastFTimeStamp 
+                << ", offset: " << timeoffset << std::endl;
+        mCurrentFPS = 1/(timeoffset);
+        
         for(int i=0;i<N;i++)
         {
             MapPoint* pMP = pTracker->mCurrentFrame.mvpMapPoints[i];
@@ -437,7 +466,6 @@ void FrameDrawer::Update(Tracking *pTracker)
                 }
             }
         }
-
     }
     mState=static_cast<int>(pTracker->mLastProcessedState);
 }
