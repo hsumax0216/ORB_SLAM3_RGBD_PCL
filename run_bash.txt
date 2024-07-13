@@ -17,3 +17,5 @@
 
 ./Examples/Monocular/mono_realsense_D435i Vocabulary/ORBvoc.txt ./Examples/Monocular/RealSense_D435i.yaml
 
+./Examples/Monocular-Inertial/mono_inertial_realsense_D435i Vocabulary/ORBvoc.txt ./Examples/Monocular-Inertial/RealSense_D435i.yaml
+

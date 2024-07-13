@@ -194,11 +194,11 @@ target_link_libraries(mono_tum ${PROJECT_NAME})
 # endif()
 
 # Mono-intertial examples
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular-Inertial)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular-Inertial)
 
-# if(realsense2_FOUND)
-#       add_executable(mono_intertial_realsense_D435i
-#          Examples/Monocular-Inertial/mono_intertial_realsense_D435i.cc)
-#       target_link_libraries(mono_intertial_realsense_D435i ${PROJECT_NAME})
-# endif()
+if(realsense2_FOUND)
+      add_executable(mono_inertial_realsense_D435i
+         Examples/Monocular-Inertial/mono_inertial_realsense_D435i.cc)
+      target_link_libraries(mono_inertial_realsense_D435i ${PROJECT_NAME})
+endif()
 
