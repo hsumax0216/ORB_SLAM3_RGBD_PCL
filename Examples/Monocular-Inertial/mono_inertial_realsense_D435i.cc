@@ -302,6 +302,9 @@ int main(int argc, char **argv) {
     double t_resize = 0.f;
     double t_track = 0.f;
 
+    double CurrentFrameTimeStamp = -1.0;
+    double LastFrameTimeStamp = -1.0;
+
     while (!SLAM.isShutDown())
     {
         std::vector<rs2_vector> vGyro;
@@ -394,6 +397,14 @@ int main(int argc, char **argv) {
 #endif
         // Pass the image to the SLAM system
         SLAM.TrackMonocular(im, timestamp, vImuMeas);
+        LastFrameTimeStamp = CurrentFrameTimeStamp;
+        std::chrono::steady_clock::time_point t_Start_Track_FPS = std::chrono::steady_clock::now();
+        auto start = std::chrono::time_point_cast<std::chrono::milliseconds>(t_Start_Track_FPS);
+        CurrentFrameTimeStamp = start.time_since_epoch().count() / 1000.0;
+        if (LastFrameTimeStamp > 0){
+            SLAM.SetTrackTimeStamp(CurrentFrameTimeStamp,LastFrameTimeStamp);
+        }
+
 #ifdef REGISTER_TIMES
     #ifdef COMPILEDWITHC11
         std::chrono::steady_clock::time_point t_End_Track = std::chrono::steady_clock::now();
