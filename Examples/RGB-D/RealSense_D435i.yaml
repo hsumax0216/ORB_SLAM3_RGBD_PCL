@@ -41,7 +41,8 @@ RGBD.DepthMapFactor: 1000.0
 # ORB Parameters
 #--------------------------------------------------------------------------------------------
 # ORB Extractor: Number of features per image
-ORBextractor.nFeatures: 1250
+# ORBextractor.nFeatures: 1250
+ORBextractor.nFeatures: 1000
 
 # ORB Extractor: Scale factor between levels in the scale pyramid 	
 ORBextractor.scaleFactor: 1.2
@@ -53,7 +54,7 @@ ORBextractor.nLevels: 8
 # Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
 # Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
 # You can lower these values if your images have low contrast			
-ORBextractor.iniThFAST: 20
+ORBextractor.iniThFAST: 15
 ORBextractor.minThFAST: 7
 
 #--------------------------------------------------------------------------------------------
@@ -69,3 +70,6 @@ Viewer.ViewpointX: 0.0
 Viewer.ViewpointY: -0.7
 Viewer.ViewpointZ: -3.5
 Viewer.ViewpointF: 500.0
+
+System.LoadAtlasToFile: "./save_maps/map-RBGD"
+System.SaveAtlasToFile: "./save_maps/map-RBGD"
